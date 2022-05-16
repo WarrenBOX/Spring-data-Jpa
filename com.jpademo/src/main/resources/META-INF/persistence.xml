@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence">
+    <!--jpa约束中需要配置persistence-unit节点
+        1. 持久化单元: 持久单元名称
+        2. transaction-type：事务管理的方式
+               2.1 JTA：分布式事务管理
+               2.2 RESOURCE_LOCAL: 本地事务管理-->
+    <persistence-unit name="myJpa" transaction-type="RESOURCE_LOCAL">
+        <!--jpa的实现方式-->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!--数据库信息
+        1.用户名，密码，驱动，数据库地址
+        -->
+        <properties>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value="dan1314520"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jpa"/>
+
+            <!--配置jpa实现方的配置信息
+            <显示sql: false/true， 自动创建数据库表: create 程序运行时创建数据库表，有表先删再建 / update： 有表不会创建表 / none不会创建表-->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>  <!--set dialect 数据库语言类型和java语言类型进行映射-->
+        </properties>
+    </persistence-unit>
+</persistence>
+
+        <!--step2: 配置jpa核心配置文件： 配置到类路径下的META-INF文件夹下-->
+
+
+<!--exceptions: Access to DialectResolutionInfo cannot be null when 'hibernate.dialect' not set : -> wrong url,username or password-->

@@ -1,0 +1,38 @@
+
+
+一、 方法列表
+
+    /**
+    @para: spec 查询条件
+           pageable: 查询第几页， 每页显示多少条 -> 结果封装为page对象
+
+    @Return:
+            分页pageBean
+    **/
+    //查询单个对象
+
+    Optional<T> findOne(@Nullable Specification<T> spec);
+
+    List<T> findAll(@Nullable Specification<T> spec);
+
+    Page<T> findAll(@Nullable Specification<T> spec, Pageable pageable);
+
+    //查询列表
+    //sort：排序参数
+    List<T> findAll(@Nullable Specification<T> spec, Sort sort);
+
+    //count:统计查询
+    long count(@Nullable Specification<T> spec);
+
+
+    ** specification： 查询条件 -> 封装查询条件为spec对象
+     - interface:
+     - 自定义我们自己的specification实现类
+     - 实现
+        Predicate toPredicate(Root<T> var1, CriteriaQuery<?> var2, CriteriaBuilder var3); //
+
+        *root: 查询的根对象（任何属性都可以从根对象获取， 如客户名称 from Customer
+        *CriteriaQuery: 顶层查询对象，自定义查询方式（了解，一般不用）
+        *CriteriaBuilder:查询的构造器，封装了很多查询的条件
+
+
