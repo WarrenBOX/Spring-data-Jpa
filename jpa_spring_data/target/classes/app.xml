@@ -1,0 +1,21 @@
+<beans>
+    <bean id = "EntityManagerFactory" class ="实体类" >
+<!--        bean: 本质上是一个可重用的组件，class只有bin的一个子集-->
+<!--        实体管理器工厂需要的信息:
+1.需要能够连结特定数据库: datasource (user,pw,url,driver) ->数据库的信息
+2.jpa的实现方式: ->hibernate
+3.需要管理的实体类的路径
+4.jpa供应商适配器 after实现方式 又是一个嵌套bean: 没有id，只有class，只在某一特定property中生效： i)自动创建数据库表  ii)显示sql iii）数据库类型 iv）数据库方言
+5.jpa的高级特性
+-->
+        <property name = "datasource" ref = ""></property>
+        <property name = "packageToScan" value = "实体类所在的包"></property>
+<!-- provider使用setter方法设置，而且通过bean容器管理，但是不想这个bean被其他访问(没有id） 因此使用嵌套bean， 但是此方法本质上与ref相同， 也类似内部类       -->
+        <property name = "provider">
+            <bean class="hibernate"></bean>
+        </property>
+
+
+    </bean>
+
+</beans>

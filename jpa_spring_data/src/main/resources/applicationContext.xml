@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop = "http://www.springframework.org/schema/aop"
+       xmlns:contet = "http://www.springframework.org/schema/context"
+       xmlns:jdbc = "http://www.springframework.org/schema/jdbc"
+       xmlns:tx = "http://www.springframework.org/schema/tx"
+       xmlns:jpa = "http://www.springframework.org/schema/data/jpa"
+       xmlns:task = "http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+                           http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd"
+        >
+
+<!--spring 和spring data jpa的配置        -->
+
+<!--  1.创建entityManagerFactory交给spring容器管理-->
+    <bean id = "entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref = "dataSource"/>
+        <!--  扫描实体类所在的包,注册配置了注册的类到spring容器 -->
+        <property name="packagesToScan" value="com.tunbobo.domain" />
+        <!--jpa的实现厂家            -->
+        <property name="persistenceProvider">
+            <!-- 在这个作用域内有效 -->
+            <bean class="org.hibernate.jpa.HibernatePersistenceProvider"></bean>
+        </property>
+
+        <!--jpa的供应商适配器-->
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" >
+                <!--配置是否自动创建数据库表                -->
+                <property name="generateDdl" value="false"/>
+                <!--指定数据库类型-->
+                <property name="database" value="MYSQL"/>
+                <!--配置数据库方言，支持的特有语法-->
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect"/>
+                <!--是否显示sql-->
+                <property name="showSql" value="true"/>
+            </bean>
+        </property>
+
+        <!--配置jpa的方言：高级特性        -->
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+        </property>
+    </bean>
+
+<!--  2. 创建一个数据库连接池-->
+    <bean id = "dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="user" value="root"></property>
+        <property name="password" value="dan1314520"></property>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/jpa"></property>
+        <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
+    </bean>
+
+    <!--3. 整合spring data jpa ： 扫描dao接口所在的包-->
+    <jpa:repositories base-package="com.tunbobo.dao" transaction-manager-ref="transactionManager"
+                      entity-manager-factory-ref="entityManagerFactory"></jpa:repositories>
+
+    <!--4.配置事务管理器-->
+    <bean id = "transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"></property>
+    </bean>
+
+    <!-- 5. 声明式事务-->
+
+    <!--6. 配置包扫描 : 扫描包下的所有注解   -->
+    <contet:component-scan base-package="com.tunbobo"></contet:component-scan>
+</beans>
